@@ -70,10 +70,10 @@ int pertence_arv (Arvore *a, char c)
     if(!verifica_arv_vazia(a))
     {
         //Busca utilizando o pré-ordem (RED)
-        //printf("%c\n", a->info);
         if(a->info == c) //visita a raiz
             return 1;
-        pertence = pertence_arv(a->esq, c); //recursão para a esquerda
+       //Poderia ter utilizado: return (pertence_arv(a->esq, c) || pertence_arv(a->dir, c));
+       pertence = pertence_arv(a->esq, c); //recursão para a esquerda
         pertence = pertence_arv(a->dir, c); //recursão para a direita
     }
 
@@ -95,6 +95,11 @@ int conta_nos (Arvore *a)
         //se chegar até aqui, siginifica que encontrou um nó, portanto, retorna a quantidade de nós
         //que já tinha encontrado + 1 (o atual)
         return ++qtdd_nos; //visita a raiz (nesse caso, retorna a quantidade de um nó)
+
+       //OTIMIZAÇÃO: return (conta_nos(a->esq) + conta_nos(a->dir) + 1);
+       //OU SEJA, a quantidade de nos, em qualquer no que se esteja, é a 
+       //quantidade de nós da subarvore a esquerda, somada a quantidade de 
+       //nós da subarvore a direita e somada ao nó atual!
     }
 
     return qtdd_nos;
@@ -122,6 +127,10 @@ int calcula_altura_arvore (Arvore *a)
         return ++alt_esq;
 
     return ++alt_dir;
+
+   //OTIIZAÇÃO return (max(calcula_altura_arvore(a->esq), calcula_altura_arvore(a->dir)) + 1)
+   //OU SEJA, a alturaa, em qualquer no que se esteja, é a é a maior altura entre as alturas das 
+   //subárvores, somada ao hop atual!
 }
 
 //========= Exercício 6 - conta folhas (maior dificuldade...) ====
@@ -140,6 +149,14 @@ int conta_nos_folha (Arvore *a)
     qtdd_folhas += conta_nos_folha(a->dir);
 
     return qtdd_folhas;
+
+   //OTIIZAÇÃO:
+   //if(a->dir==NULL && a->esq==NULL) (se for uma folha)...
+   //     return 1;
+   //return (conta_nos_folha(a->esq) + conta_nos_folha(a->dir));
+   //OU SEJA, a quantidade de folhas, em qualquer no que se esteja (se ele não for uma folha), 
+   //é a quantidade de folhas da subarvore da esquerda, somada a quantidade de folhas da 
+   //subarvore da direita
 }
 
 int main (int argc, char *argv[]) {
